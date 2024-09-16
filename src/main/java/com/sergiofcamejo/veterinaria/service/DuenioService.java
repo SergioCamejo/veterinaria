@@ -1,11 +1,10 @@
 package com.sergiofcamejo.veterinaria.service;
 
 import com.sergiofcamejo.veterinaria.dto.DuenioDTO;
+import com.sergiofcamejo.veterinaria.exception.DuenioSinMascotaException;
 import com.sergiofcamejo.veterinaria.model.Duenio;
 import com.sergiofcamejo.veterinaria.model.Mascota;
 import com.sergiofcamejo.veterinaria.repository.IDuenioRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -18,12 +17,16 @@ public class DuenioService implements IDuenioService {
 
     @Override
     public List<Duenio> getDuenios() {
-        return List.of();
+        return this.duenioRepo.findAll();
     }
 
     public void saveDuenio(DuenioDTO duenioDTO) {
         // Se verifica que el dueño no exista
         this.verificarDni(duenioDTO.getDni());
+        if (duenioDTO.getMascota() == null){
+            throw new DuenioSinMascotaException("Para dar de alta a una persona, siempre deberá de " +
+                                                "darse de alta a una mascota también");
+        }
         // Se da de alta primero al dueño que trae a la mascota
         Duenio duenio = new Duenio();
         duenio.setDni(duenioDTO.getDni());
@@ -45,8 +48,32 @@ public class DuenioService implements IDuenioService {
     }
 
     @Override
-    public void editDuenio(Long id, DuenioDTO DuenioDTO) {
+    public void editDuenio(Long id, DuenioDTO duenioDTO) {
+        Duenio duenioAEditar = this.findDuenio(id);
+        if (duenioDTO.getDni() != null){
+            duenioAEditar.setDni(duenioDTO.getDni());
+        }
+        if (duenioDTO.getNombre() != null){
+            duenioAEditar.setNombre(duenioDTO.getNombre());
+        }
+        if (duenioDTO.getApellido() != null){
+            duenioAEditar.setApellido(duenioDTO.getApellido());
+        }
+        if (duenioDTO.getCelular() != null){
+            duenioAEditar.setCelular(duenioDTO.getCelular());
+        }
+        this.duenioRepo.save(duenioAEditar);
+    }
 
+    @Override
+    public void deteleDuenio(Long id) {
+        this.duenioRepo.deleteById(id);
+    }
+
+    @Override
+    public Duenio findDuenio(Long id) {
+        return this.duenioRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("No se encontró a la persona con el id " +  id + "."));
     }
 
     private void verificarDni(String dni){
@@ -57,4 +84,5 @@ public class DuenioService implements IDuenioService {
             }
         }
     }
+
 }

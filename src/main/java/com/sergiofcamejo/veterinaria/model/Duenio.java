@@ -20,4 +20,16 @@ public class Duenio {
     @OneToMany(mappedBy = "duenio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mascota> mascotas;
 
+    public Duenio() {
+    }
+
+    public Duenio(Long id, String dni, String nombre, String apellido, String celular, List<Mascota> mascotas) {
+        this.id = id;
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.celular = celular;
+        this.mascotas = mascotas;
+    }
+
 }

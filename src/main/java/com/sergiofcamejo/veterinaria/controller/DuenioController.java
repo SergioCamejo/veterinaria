@@ -1,6 +1,7 @@
 package com.sergiofcamejo.veterinaria.controller;
 
 import com.sergiofcamejo.veterinaria.dto.DuenioDTO;
+import com.sergiofcamejo.veterinaria.exception.DuenioSinMascotaException;
 import com.sergiofcamejo.veterinaria.model.Duenio;
 import com.sergiofcamejo.veterinaria.service.IDuenioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class DuenioController {
         return this.duenioServ.getDuenios();
     }
 
+    @GetMapping("/traer/{id}")
+    public Duenio getDuenio(@PathVariable Long id){
+        return this.duenioServ.findDuenio(id);
+    }
+
     @PostMapping("/crear")
     public ResponseEntity<String> saveDuenio(@RequestBody DuenioDTO duenioDTO) {
         String mensaje;
@@ -31,11 +37,22 @@ public class DuenioController {
             mensaje = "Dado de alta a " + duenioDTO.getNombre() + " " + duenioDTO.getApellido()
                     + " con su mascota " + duenioDTO.getMascota().getNombre() + ".";
             status = HttpStatus.OK;
-        } catch (IllegalArgumentException e) {
+        } catch (DuenioSinMascotaException | IllegalArgumentException e) {
             mensaje = e.getMessage();
             status = HttpStatus.BAD_REQUEST;
         }
         return  ResponseEntity.status(status).body(mensaje);
+    }
+
+    @PutMapping("/editar/{id}")
+    public Duenio editDuenio(@PathVariable Long id, @RequestBody DuenioDTO duenioDTO){
+        this.duenioServ.editDuenio(id, duenioDTO);
+        return this.duenioServ.findDuenio(id);
+    }
+
+    @DeleteMapping("/borrar/{id}")
+    public void deleteDuenio(@PathVariable Long id){
+        this.duenioServ.deteleDuenio(id);
     }
 
 }
