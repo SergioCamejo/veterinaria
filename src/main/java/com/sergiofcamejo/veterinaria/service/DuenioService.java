@@ -80,7 +80,7 @@ public class DuenioService implements IDuenioService {
         for (Duenio duenio : this.duenioRepo.findAll()){
             if (duenio.getDni().equals(dni)){
                 throw new IllegalArgumentException("La persona con el DNI "
-                        + dni + "ya se encuentra registrada en el sistema");
+                        + dni + " ya se encuentra registrada en el sistema");
             }
         }
     }

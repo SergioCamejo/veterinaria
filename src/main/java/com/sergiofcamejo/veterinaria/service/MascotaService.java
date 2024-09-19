@@ -29,7 +29,7 @@ public class MascotaService implements IMascotaService {
     public void saveMascota(MascotaNuevaDTO mascotaNuevaDTO) {
         // Se verifica que el dueño exista
         Duenio duenio = this.duenioRepo.findById(mascotaNuevaDTO.getDuenioId())
-                .orElseThrow(() -> new RuntimeException("No se encontró a la persona con el id " +  mascotaNuevaDTO.getDuenioId() + "."));
+                .orElseThrow(() -> new RuntimeException("No se encontró a la mascota con el id " +  mascotaNuevaDTO.getDuenioId() + "."));
         // Una vez verificado el dueño, se crea a la mascota
         Mascota mascotaNueva = new Mascota();
         mascotaNueva.setNombre(mascotaNuevaDTO.getNombre());

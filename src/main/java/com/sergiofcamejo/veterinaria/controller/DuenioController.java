@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/duenios")
+@RequestMapping("/api/clientes")
 public class DuenioController {
 
     @Autowired
     private IDuenioService duenioServ;
 
-    @GetMapping("/traer")
+    @GetMapping
     public List<Duenio> getDuenios(){
         return this.duenioServ.getDuenios();
     }
 
-    @GetMapping("/traer/{id}")
+    @GetMapping("/{id}")
     public Duenio getDuenio(@PathVariable Long id){
         return this.duenioServ.findDuenio(id);
     }
 
-    @PostMapping("/crear")
+    @PostMapping
     public ResponseEntity<String> saveDuenio(@RequestBody DuenioDTO duenioDTO) {
         String mensaje;
         HttpStatus status;
@@ -44,13 +44,13 @@ public class DuenioController {
         return  ResponseEntity.status(status).body(mensaje);
     }
 
-    @PutMapping("/editar/{id}")
+    @PutMapping("/{id}")
     public Duenio editDuenio(@PathVariable Long id, @RequestBody DuenioDTO duenioDTO){
         this.duenioServ.editDuenio(id, duenioDTO);
         return this.duenioServ.findDuenio(id);
     }
 
-    @DeleteMapping("/borrar/{id}")
+    @DeleteMapping("/{id}")
     public void deleteDuenio(@PathVariable Long id){
         this.duenioServ.deteleDuenio(id);
     }

@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mascotas")
+@RequestMapping("/api/mascotas")
 public class MacotaController {
 
     @Autowired
     private IMascotaService mascoServ;
 
-    @GetMapping("/traer")
+    @GetMapping
     public List<Mascota> getMAscotas(){
         return this.mascoServ.getMascotas();
     }
 
-    @GetMapping("/traer/{id}")
+    @GetMapping("/{id}")
     public Mascota getMascota(@PathVariable Long id){
         return this.mascoServ.finMascota(id);
     }
 
-    @PostMapping("/crear")
+    @PostMapping
     public ResponseEntity<String> saveMascota(@RequestBody MascotaNuevaDTO mascotaNuevaDTO){
         String mensaje;
         HttpStatus status;
@@ -43,13 +43,13 @@ public class MacotaController {
         return ResponseEntity.status(status).body(mensaje);
     }
 
-    @PutMapping("/editar/{id}")
+    @PutMapping("/{id}")
     public Mascota editMascota(@PathVariable Long id, @RequestBody MascotaDTO mascotaDTO){
         this.mascoServ.editMascota(id, mascotaDTO);
         return this.mascoServ.finMascota(id);
     }
 
-    @DeleteMapping("/borrar/{id}")
+    @DeleteMapping("/{id}")
     public void deleteMascota(@PathVariable Long id){
         this.mascoServ.deleteMAscota(id);
     }
